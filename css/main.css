@@ -1811,7 +1811,26 @@ body::before {
    border-color: var(--teal-deep);
    box-shadow: 0 10px 22px rgba(0, 125, 114, .22);
 }
-
+.btn_add_cart{
+      font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgb(255, 255, 255);
+    background: var(--ink);
+    border: 1px solid var(--ink);
+    min-width: 150px;
+    backdrop-filter: blur(4px);
+    padding: 14px 28px;
+    border-radius: 4px;
+    transition: all 0.25s var(--ease-smooth);
+}
+.btn_add_cart:hover {
+    box-shadow: rgba(0, 125, 114, 0.22) 0px 10px 22px;
+    background: var(--teal-deep);
+    border-color: var(--teal-deep);
+}
 .btn-buy-now {
    color: var(--ink);
    border-color: var(--ink);
