@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Shopping Cart - UrbanStep. Review your items and proceed to checkout." />
+  <title>Shopping Cart - UrbanStep</title>
+  <link rel="icon" type="image/x-icon" href="images/favicon.png">
+  <!-- Bootstrap 5 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="css/main.css?v=1.5" />
+  <!-- Cart CSS -->
+  <link rel="stylesheet" href="css/cart.css" />
+</head>
+
+<body>
+  <div class="main_wrapper common_class">
+
+    <!-- ========== HEADER ========== -->
+    <header class="main_header">
+      <div class="container">
+        <div class="site-header" id="site-header">
+          <div class="header__brand">
+            <a href="index.html"><img src="images/brand_logo_dark.png" alt="UrbanStep Logo"></a>
+          </div>
+
+          <nav class="header__nav" id="main-nav" aria-label="Main navigation">
+            <a href="index.html">Home</a>
+            <a href="index.html#best-sellers">Best Sellers</a>
+            <a href="index.html#collections">Our Signatures</a>
+            <a href="index.html#new-arrivals">Arrivals</a>
+            <a href="index.html#reviews">Reviews</a>
+          </nav>
+
+          <div class="header__actions">
+            <!-- Wishlist -->
+            <button class="header__action-btn" id="btn-wishlist" aria-label="Open wishlist" aria-haspopup="dialog"
+              aria-controls="wishlist-drawer" aria-expanded="false">
+              <svg viewBox="0 0 24 24">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z" />
+              </svg>
+              <span class="wishlist-badge" aria-label="0 saved items">0</span>
+            </button>
+            <!-- Cart -->
+            <button class="header__action-btn" id="btn-cart" aria-label="Shopping Cart" aria-haspopup="dialog"
+              aria-controls="cart-drawer" aria-expanded="false">
+              <svg viewBox="0 0 24 24">
+                <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <path d="M16 10a4 4 0 0 1-8 0" />
+              </svg>
+              <span class="cart-badge" aria-label="0 items in cart">0</span>
+            </button>
+            <!-- Profile -->
+            <button class="header__action-btn" id="btn-profile" aria-label="User profile">
+              <svg viewBox="0 0 24 24">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </button>
+            <!-- Hamburger (mobile) -->
+            <div class="header__hamburger" id="hamburger-btn" role="button" aria-label="Open menu" tabindex="0">
+              <span></span><span></span><span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <!-- ========== CART HERO ========== -->
+      <section class="cart-hero section" aria-labelledby="cart-title">
+        <div class="container">
+          <div class="section-header">
+            <h1 id="cart-title">Shopping Cart</h1>
+            <p class="section-subtitle">Review your items and proceed to checkout</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========== CART CONTENT ========== -->
+      <section class="cart-content section" aria-labelledby="cart-content">
+        <div class="container">
+          <div class="cart-layout">
+            <!-- Left: Cart Items -->
+            <div class="cart-items-section">
+              <div id="empty-cart" class="empty-cart" style="display: none;">
+                <div class="empty-cart-content">
+                  <div class="empty-icon">🛍️</div>
+                  <h2>Your cart is empty</h2>
+                  <p>Add a pair of sneakers and it will appear here instantly.</p>
+                  <a href="product-details.html" class="btn-primary">Continue Shopping</a>
+                </div>
+              </div>
+
+              <div id="cart-items" class="cart-items-list">
+                <!-- Cart items will be rendered here -->
+              </div>
+
+              <!-- Coupon Section -->
+              <div class="coupon-section" id="coupon-section" style="display: none;">
+                <h3>Have a coupon code?</h3>
+                <div class="coupon-form">
+                  <input type="text" id="coupon-input" placeholder="Enter coupon code" maxlength="20"
+                    aria-label="Enter coupon code" />
+                  <button id="apply-coupon-btn" class="btn-coupon">Apply</button>
+                </div>
+                <div id="coupon-message" class="coupon-message"></div>
+              </div>
+            </div>
+
+            <!-- Right: Order Summary (Sticky) -->
+            <aside class="cart-summary-section" id="summary-section" style="display: none;">
+              <div class="order-summary sticky">
+                <h2>Order Summary</h2>
+
+                <div class="summary-row">
+                  <span>Subtotal</span>
+                  <span id="subtotal-price">$0.00</span>
+                </div>
+
+                <div class="summary-row discount-row" id="discount-row" style="display: none;">
+                  <span>Discount</span>
+                  <span id="discount-price">-$0.00</span>
+                </div>
+
+                <div class="summary-row">
+                  <span>Shipping</span>
+                  <span id="shipping-price">Free</span>
+                </div>
+
+                <div class="summary-row">
+                  <span>Tax (GST)</span>
+                  <span id="tax-price">$0.00</span>
+                </div>
+
+                <div class="summary-divider"></div>
+
+                <div class="summary-row summary-total">
+                  <span>Grand Total</span>
+                  <span id="grand-total">$0.00</span>
+                </div>
+
+                <div id="savings-badge" class="savings-badge" style="display: none;">
+                  You save <span id="savings-amount">$0.00</span>
+                </div>
+
+                <button id="checkout-btn" class="btn-primary btn-full">Proceed to Checkout</button>
+                <a href="product-details.html" class="btn-secondary btn-full">Continue Shopping</a>
+
+                <!-- Delivery Info -->
+                <div class="delivery-info flex-row flex-wrap">
+                  <div class="info-item">
+                    <span class="info-icon">📦</span>
+                    <div>
+                      <strong>Free Shipping</strong>
+                      <small>On orders over $100</small>
+                    </div>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-icon">↺</span>
+                    <div>
+                      <strong>30-Day Returns</strong>
+                      <small>Easy returns, always</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========== RELATED PRODUCTS ========== -->
+      <section class="related-section section" id="related-section" style="display: none;">
+        <div class="container">
+          <h2 class="section-title">You Might Also Like</h2>
+          <div class="products-grid" id="related-products">
+            <!-- Related products will be rendered here -->
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="site-footer">
+      <div class="container">
+        <div class="site-footer__intro">
+          <p class="eyebrow">Move with intention</p>
+          <h2 class="text-white">Made for the miles ahead.</h2>
+          <a class="site-footer__cta" href="index.html#best-sellers">Shop the latest <span aria-hidden="true">↗</span></a>
+        </div>
+        <div class="row g-5">
+          <div class="col-lg-4"><a class="site-footer__brand" href="index.html"><img src="images/brand_logo.png"
+                alt="UrbanStep"></a>
+            <p>Made for those who keep moving forward.</p>
+            <div class="social-links"><a href="#community">Instagram</a><a href="#community">TikTok</a><a
+                href="#community">YouTube</a></div>
+          </div>
+          <div class="col-6 col-md-3 col-lg-2 offset-lg-1">
+            <h2>Shop</h2>
+            <ul>
+              <li><a href="index.html#new-arrivals">New arrivals</a></li>
+              <li><a href="index.html#best-sellers">Men</a></li>
+              <li><a href="index.html#best-sellers">Women</a></li>
+              <li><a href="index.html#best-sellers">Kids</a></li>
+              <li><a href="index.html#best-sellers">Sale</a></li>
+            </ul>
+          </div>
+          <div class="col-6 col-md-3 col-lg-2">
+            <h2>Help</h2>
+            <ul>
+              <li><a href="#size-guide">Size guide</a></li>
+              <li><a href="#returns">Returns</a></li>
+              <li><a href="#shipping">Shipping</a></li>
+              <li><a href="#contact">Contact us</a></li>
+            </ul>
+          </div>
+          <div class="col-6 col-md-3 col-lg-2">
+            <h2>About</h2>
+            <ul>
+              <li><a href="index.html#story">Our story</a></li>
+              <li><a href="index.html#community">Community</a></li>
+              <li><a href="#careers">Careers</a></li>
+              <li><a href="#journal">Journal</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="site-footer__bottom">
+          <p>© 2026 UrbanStep. All rights reserved.</p>
+          <div><a href="#privacy">Privacy</a><a href="#terms">Terms</a><a href="#accessibility">Accessibility</a></div>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <div class="wishlist-overlay" id="wishlist-overlay" hidden></div>
+  <aside class="wishlist-drawer" id="wishlist-drawer" role="dialog" aria-modal="true" aria-labelledby="wishlist-title"
+    aria-hidden="true" tabindex="-1">
+    <div class="wishlist-drawer__header">
+      <div><p class="eyebrow">Saved pairs</p><h2 id="wishlist-title"><strong>Your wishlist</strong></h2></div>
+      <button class="wishlist-drawer__close" id="wishlist-close" type="button" aria-label="Close wishlist">×</button>
+    </div>
+    <div class="wishlist-drawer__body" id="wishlist-items" aria-live="polite"></div>
+  </aside>
+
+  <div class="cart-overlay" id="cart-overlay" hidden></div>
+  <aside class="cart-drawer" id="cart-drawer" role="dialog" aria-modal="true" aria-labelledby="cart-title"
+    aria-hidden="true" tabindex="-1">
+    <div class="cart-drawer__header">
+      <div><p class="eyebrow">Your bag</p><h2 id="cart-title"><strong>Shopping Cart</strong></h2></div>
+      <button class="cart-drawer__close" id="cart-close" type="button" aria-label="Close cart">×</button>
+    </div>
+    <div class="cart-drawer__body" id="cart-items" aria-live="polite"></div>
+  </aside>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container" aria-live="assertive" aria-atomic="true"></div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/cart.js?v=2"></script>
+  <script src="js/app.js"></script>
+</body>
+
+</html>

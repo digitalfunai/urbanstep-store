@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Checkout - UrbanStep. Secure and fast checkout process." />
+  <title>Checkout - UrbanStep</title>
+  <link rel="icon" type="image/x-icon" href="images/favicon.png">
+  <!-- Bootstrap 5 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="css/main.css?v=1.5" />
+  <!-- Checkout CSS -->
+  <link rel="stylesheet" href="css/checkout.css" />
+</head>
+
+<body>
+  <div class="main_wrapper common_class">
+
+    <!-- ========== HEADER ========== -->
+    <header class="main_header">
+      <div class="container">
+        <div class="site-header" id="site-header">
+          <div class="header__brand">
+            <a href="index.html"><img src="images/brand_logo_dark.png" alt="UrbanStep Logo"></a>
+          </div>
+
+          <nav class="header__nav" id="main-nav" aria-label="Main navigation">
+            <a href="index.html">Home</a>
+            <a href="index.html#best-sellers">Best Sellers</a>
+            <a href="index.html#collections">Our Signatures</a>
+            <a href="index.html#new-arrivals">Arrivals</a>
+            <a href="index.html#reviews">Reviews</a>
+          </nav>
+
+          <div class="header__actions">
+            <!-- Wishlist -->
+            <button class="header__action-btn" id="btn-wishlist" aria-label="Open wishlist" aria-haspopup="dialog"
+              aria-controls="wishlist-drawer" aria-expanded="false">
+              <svg viewBox="0 0 24 24">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z" />
+              </svg>
+              <span class="wishlist-badge" aria-label="0 saved items">0</span>
+            </button>
+            <!-- Cart -->
+            <button class="header__action-btn" id="btn-cart" aria-label="Shopping Cart" aria-haspopup="dialog"
+              aria-controls="cart-drawer" aria-expanded="false">
+              <svg viewBox="0 0 24 24">
+                <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                <line x1="3" y1="6" x2="21" y2="6" />
+                <path d="M16 10a4 4 0 0 1-8 0" />
+              </svg>
+              <span class="cart-badge" aria-label="0 items in cart">0</span>
+            </button>
+            <!-- Profile -->
+            <button class="header__action-btn" id="btn-profile" aria-label="User profile">
+              <svg viewBox="0 0 24 24">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </button>
+            <!-- Hamburger (mobile) -->
+            <div class="header__hamburger" id="hamburger-btn" role="button" aria-label="Open menu" tabindex="0">
+              <span></span><span></span><span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <!-- ========== CHECKOUT HERO ========== -->
+      <section class="checkout-hero section" aria-labelledby="checkout-title">
+        <div class="container">
+          <h1 id="checkout-title">Secure Checkout</h1>
+          <p class="section-subtitle text-center">Review your items and proceed to checkout</p>
+          <!-- Progress Indicator -->
+          <div class="progress-indicator d-none">
+            <div class="progress-step active" data-step="customer">
+              <div class="step-number">1</div>
+              <div class="step-label">Customer</div>
+            </div>
+            <div class="border_left"></div>
+            <div class="progress-step" data-step="shipping">
+              <div class="step-number">2</div>
+              <div class="step-label">Shipping</div>
+            </div>
+            <div class="border_left"></div>
+            <div class="progress-step" data-step="payment">
+              <div class="step-number">3</div>
+              <div class="step-label">Payment</div>
+            </div>
+            <div class="border_left"></div>
+            <div class="progress-step" data-step="review">
+              <div class="step-number">4</div>
+              <div class="step-label">Review</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========== CHECKOUT CONTENT ========== -->
+      <section class="checkout-content section">
+        <div class="container">
+          <div class="checkout-layout">
+            <!-- Left: Checkout Form -->
+            <div class="checkout-form-section">
+
+              <!-- STEP 1: CUSTOMER DETAILS -->
+              <form class="checkout-step active" id="step-customer" data-step="customer">
+                <h2 class="step-title">Customer Details</h2>
+
+                <div class="form-group">
+                  <label for="first-name">First Name *</label>
+                  <input type="text" id="first-name" name="first_name" required placeholder="John" />
+                  <span class="error-message"></span>
+                </div>
+
+                <div class="form-group">
+                  <label for="last-name">Last Name *</label>
+                  <input type="text" id="last-name" name="last_name" required placeholder="Doe" />
+                  <span class="error-message"></span>
+                </div>
+
+                <div class="form-group">
+                  <label for="email">Email *</label>
+                  <input type="email" id="email" name="email" required placeholder="john@example.com" />
+                  <span class="error-message"></span>
+                </div>
+
+                <div class="form-group">
+                  <label for="phone">Phone Number *</label>
+                  <input type="tel" id="phone" name="phone" required placeholder="+1 (555) 000-0000" />
+                  <span class="error-message"></span>
+                </div>
+
+                <button type="button" class="btn-next" data-next="shipping">Continue to Shipping</button>
+              </form>
+
+              <!-- STEP 2: SHIPPING DETAILS -->
+              <form class="checkout-step" id="step-shipping" data-step="shipping">
+                <h2 class="step-title">Shipping Address</h2>
+
+                <div class="form-group">
+                  <label for="address-1">Address Line 1 *</label>
+                  <input type="text" id="address-1" name="address_line1" required placeholder="123 Main Street" />
+                  <span class="error-message"></span>
+                </div>
+
+                <div class="form-group">
+                  <label for="address-2">Address Line 2</label>
+                  <input type="text" id="address-2" name="address_line2" placeholder="Apt, suite, etc." />
+                </div>
+
+                <div class="form-group">
+                  <label for="city">City *</label>
+                  <input type="text" id="city" name="city" required placeholder="New York" />
+                  <span class="error-message"></span>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="country">Country *</label>
+                    <select id="country" name="country" required>
+                      <option value="">Select Country</option>
+                      <option value="US">United States</option>
+                      <option value="CA">Canada</option>
+                      <option value="GB">United Kingdom</option>
+                      <option value="AU">Australia</option>
+                      <option value="IN">India</option>
+                    </select>
+                    <span class="error-message"></span>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="state">State/Province *</label>
+                    <input type="text" id="state" name="state" required placeholder="NY" />
+                    <span class="error-message"></span>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="zip">ZIP Code *</label>
+                  <input type="text" id="zip" name="zip" required placeholder="10001" />
+                  <span class="error-message"></span>
+                </div>
+
+                <!-- Shipping Method -->
+                <h3 class="shipping-title">Shipping Method</h3>
+                <div class="shipping-options">
+                  <label class="shipping-option">
+                    <input type="radio" name="shipping_method" value="standard" checked />
+                    <div class="option-content">
+                      <div class="option-title">Standard Shipping</div>
+                      <div class="option-desc">3-5 business days</div>
+                    </div>
+                    <div class="option-price">Free</div>
+                  </label>
+
+                  <label class="shipping-option">
+                    <input type="radio" name="shipping_method" value="express" />
+                    <div class="option-content">
+                      <div class="option-title">Express Shipping</div>
+                      <div class="option-desc">1-2 business days</div>
+                    </div>
+                    <div class="option-price">$15.00</div>
+                  </label>
+
+                  <label class="shipping-option">
+                    <input type="radio" name="shipping_method" value="overnight" />
+                    <div class="option-content">
+                      <div class="option-title">Overnight Shipping</div>
+                      <div class="option-desc">Next business day</div>
+                    </div>
+                    <div class="option-price">$25.00</div>
+                  </label>
+                </div>
+
+                <div class="button-group">
+                  <button type="button" class="btn-prev" data-prev="customer">Back</button>
+                  <button type="button" class="btn-next" data-next="payment">Continue to Payment</button>
+                </div>
+              </form>
+
+              <!-- STEP 3: PAYMENT -->
+              <form class="checkout-step" id="step-payment" data-step="payment">
+                <h2 class="step-title">Payment Method</h2>
+
+                <div class="payment-methods">
+                  <label class="payment-method">
+                    <input type="radio" name="payment_method" value="card" checked />
+                    <div class="method-title">Credit / Debit Card</div>
+                  </label>
+
+                  <label class="payment-method">
+                    <input type="radio" name="payment_method" value="upi" />
+                    <div class="method-title">UPI</div>
+                  </label>
+
+                  <label class="payment-method">
+                    <input type="radio" name="payment_method" value="netbanking" />
+                    <div class="method-title">Net Banking</div>
+                  </label>
+
+                  <label class="payment-method d-none">
+                    <input type="radio" name="payment_method" value="wallet" />
+                    <div class="method-title">Digital Wallet</div>
+                  </label>
+
+                  <label class="payment-method">
+                    <input type="radio" name="payment_method" value="cod" />
+                    <div class="method-title">Cash on Delivery</div>
+                  </label>
+                </div>
+
+                <!-- Card Payment Form -->
+                <div id="card-form" class="payment-form">
+                  <h3>Card Details</h3>
+
+                  <div class="form-group">
+                    <label for="card-number">Card Number *</label>
+                    <input type="text" id="card-number" name="card_number" required
+                      placeholder="1234 5678 9012 3456" maxlength="19" />
+                    <span class="error-message"></span>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="card-holder">Card Holder Name *</label>
+                    <input type="text" id="card-holder" name="card_holder" required placeholder="John Doe" />
+                    <span class="error-message"></span>
+                  </div>
+
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="expiry">Expiry Date *</label>
+                      <input type="text" id="expiry" name="expiry" required placeholder="MM/YY" maxlength="5" />
+                      <span class="error-message"></span>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="cvv">CVV *</label>
+                      <input type="text" id="cvv" name="cvv" required placeholder="123" maxlength="3" />
+                      <span class="error-message"></span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- UPI Form -->
+                <div id="upi-form" class="payment-form" style="display: none;">
+                  <h3>UPI Payment</h3>
+                  <div class="upi-qr">
+                    <div class="qr-placeholder">📱 UPI QR Code</div>
+                  </div>
+                  <div class="form-group">
+                    <label for="upi-id">UPI ID *</label>
+                    <input type="text" id="upi-id" name="upi_id" placeholder="name@upi" />
+                    <span class="error-message"></span>
+                  </div>
+                </div>
+
+                <div class="button-group">
+                  <button type="button" class="btn-prev" data-prev="shipping">Back</button>
+                  <button type="button" class="btn-next" data-next="review">Continue to Review</button>
+                </div>
+              </form>
+
+              <!-- STEP 4: REVIEW ORDER -->
+              <form class="checkout-step" id="step-review" data-step="review">
+                <h2 class="step-title">Review Order</h2>
+
+                <div class="review-section">
+                  <h3>Customer Information</h3>
+                  <div class="review-content" id="review-customer"></div>
+                </div>
+
+                <div class="review-section">
+                  <h3>Shipping Address</h3>
+                  <div class="review-content" id="review-shipping"></div>
+                </div>
+
+                <div class="review-section">
+                  <h3>Payment Method</h3>
+                  <div class="review-content" id="review-payment"></div>
+                </div>
+
+                <div class="review-section">
+                  <h3>Order Items</h3>
+                  <div class="review-content" id="review-items"></div>
+                </div>
+
+                <!-- Terms & Conditions -->
+                <label class="checkbox-group">
+                  <input type="checkbox" id="terms-checkbox" required />
+                  <span>I agree to the <a href="#terms">Terms & Conditions</a> and <a href="#privacy">Privacy Policy</a></span>
+                </label>
+                <span class="error-message" id="terms-error"></span>
+
+                <div class="button-group align-items-center">
+                  <button type="button" class="btn-prev" data-prev="payment">Back</button>
+                  <button type="button" id="place-order-btn" class="btn-primary btn-full mt-0">Place Order</button>
+                </div>
+              </form>
+
+            </div>
+
+            <!-- Right: Order Summary (Sticky) -->
+            <aside class="checkout-summary-section">
+              <div class="order-summary sticky">
+                <h2>Order Summary</h2>
+
+                <div class="summary-items" id="summary-items">
+                  <!-- Items will be rendered here -->
+                </div>
+
+                <div class="summary-row">
+                  <span>Subtotal</span>
+                  <span id="summary-subtotal">$0.00</span>
+                </div>
+
+                <div class="summary-row" id="summary-discount-row" style="display: none;">
+                  <span>Discount</span>
+                  <span id="summary-discount">-$0.00</span>
+                </div>
+
+                <div class="summary-row">
+                  <span>Shipping</span>
+                  <span id="summary-shipping">Free</span>
+                </div>
+
+                <div class="summary-row">
+                  <span>Tax</span>
+                  <span id="summary-tax">$0.00</span>
+                </div>
+
+                <div class="summary-divider"></div>
+
+                <div class="summary-row summary-total">
+                  <span>Grand Total</span>
+                  <span id="summary-total">$0.00</span>
+                </div>
+
+                <!-- Delivery Info -->
+                <div class="delivery-info flex-row flex-wrap">
+                  <div class="info-item">
+                    <span class="info-icon">📦</span>
+                    <div>
+                      <strong>Free Shipping</strong>
+                      <small>On orders over $100</small>
+                    </div>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-icon">↺</span>
+                    <div>
+                      <strong>30-Day Returns</strong>
+                      <small>Easy returns, always</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="site-footer" style="margin-top: 80px;">
+      <div class="container">
+        <div class="site-footer__intro">
+          <p class="eyebrow">Move with intention</p>
+          <h2 class="text-white">Complete your purchase</h2>
+        </div>
+        <div class="site-footer__bottom">
+          <p>© 2026 UrbanStep. All rights reserved.</p>
+          <div><a href="#privacy">Privacy</a><a href="#terms">Terms</a><a href="#accessibility">Accessibility</a></div>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <div class="wishlist-overlay" id="wishlist-overlay" hidden></div>
+  <aside class="wishlist-drawer" id="wishlist-drawer" role="dialog" aria-modal="true" aria-labelledby="wishlist-title"
+    aria-hidden="true" tabindex="-1">
+    <div class="wishlist-drawer__header">
+      <div><p class="eyebrow">Saved pairs</p><h2 id="wishlist-title"><strong>Your wishlist</strong></h2></div>
+      <button class="wishlist-drawer__close" id="wishlist-close" type="button" aria-label="Close wishlist">×</button>
+    </div>
+    <div class="wishlist-drawer__body" id="wishlist-items" aria-live="polite"></div>
+  </aside>
+
+  <div class="cart-overlay" id="cart-overlay" hidden></div>
+  <aside class="cart-drawer" id="cart-drawer" role="dialog" aria-modal="true" aria-labelledby="cart-title"
+    aria-hidden="true" tabindex="-1">
+    <div class="cart-drawer__header">
+      <div><p class="eyebrow">Your bag</p><h2 id="cart-title"><strong>Shopping Cart</strong></h2></div>
+      <button class="cart-drawer__close" id="cart-close" type="button" aria-label="Close cart">×</button>
+    </div>
+    <div class="cart-drawer__body" id="cart-items" aria-live="polite"></div>
+  </aside>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container" aria-live="assertive" aria-atomic="true"></div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/checkout.js"></script>
+  <script src="js/app.js"></script>
+</body>
+
+</html>
