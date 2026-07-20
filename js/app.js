@@ -118,15 +118,28 @@
     const product = typeof productName === 'string'
       ? products.find((item) => item.name === productName) || products[selectedProduct]
       : productName;
-    const existingItem = cartEntries.find((item) => item.name === product.name);
+    
+    // Find existing item using ID if available, otherwise use name
+    let existingItem;
+    if (product.id) {
+      existingItem = cartEntries.find((item) => item.id === product.id);
+    } else {
+      existingItem = cartEntries.find((item) => item.name === product.name);
+    }
 
     if (existingItem) {
       existingItem.quantity = Math.max(0, existingItem.quantity + count);
       if (existingItem.quantity === 0) {
-        const index = cartEntries.findIndex((item) => item.name === product.name);
+        const index = product.id 
+          ? cartEntries.findIndex((item) => item.id === product.id)
+          : cartEntries.findIndex((item) => item.name === product.name);
         if (index >= 0) cartEntries.splice(index, 1);
       }
     } else if (count > 0) {
+      // Ensure product has an ID for better merging
+      if (!product.id) {
+        product.id = product.name.toLowerCase().replace(/\s+/g, '-');
+      }
       cartEntries.push({ ...product, quantity: count });
     }
 
@@ -211,8 +224,19 @@
       `).join('')
       : '';
 
+    // Calculate total price
+    const totalPrice = cartEntries.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
     cartItems.innerHTML = cartEntries.length
-      ? `<ul class="cart-items">${summary}</ul>`
+      ? `<ul class="cart-items">${summary}</ul>
+         <div style="padding: 20px; border-top: 1px solid rgba(0,0,0,0.08);">
+           <div style="display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 14px; font-weight: 700;">
+             <span>Subtotal:</span>
+             <span>$${totalPrice.toFixed(2)}</span>
+           </div>
+           <a href="cart.html" style="display: block; width: 100%; padding: 12px; background: #f0c040; color: #1a1a1a; border: none; border-radius: 6px; text-align: center; font-weight: 700; text-decoration: none; cursor: pointer; margin-bottom: 8px; font-size: 14px;">Go to Cart</a>
+           <a href="checkout.html" style="display: block; width: 100%; padding: 12px; background: #1a1a1a; color: white; border: none; border-radius: 6px; text-align: center; font-weight: 700; text-decoration: none; cursor: pointer; font-size: 14px;">Checkout</a>
+         </div>`
       : '<div class="cart-empty"><span aria-hidden="true">🛍️</span><h3>Your cart is empty</h3><p>Add a pair and it will appear here instantly.</p></div>';
   }
 

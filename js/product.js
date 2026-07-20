@@ -426,6 +426,18 @@ class ProductDetails {
     // Overlay clicks
     document.getElementById('cart-overlay')?.addEventListener('click', () => this.closeCartDrawer());
     document.getElementById('wishlist-overlay')?.addEventListener('click', () => this.closeWishlistDrawer());
+
+    // Close drawers on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if (this.cartDrawer && this.cartDrawer.getAttribute('aria-hidden') === 'false') {
+          this.closeCartDrawer();
+        }
+        if (this.wishlistDrawer && this.wishlistDrawer.getAttribute('aria-hidden') === 'false') {
+          this.closeWishlistDrawer();
+        }
+      }
+    });
   }
 
   // ========== IMAGE GALLERY ==========
