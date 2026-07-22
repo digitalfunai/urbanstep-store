@@ -430,10 +430,9 @@ class ProductDetails {
     // Close drawers on Escape key
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
-        if (this.cartDrawer && this.cartDrawer.getAttribute('aria-hidden') === 'false') {
+        if (this.cartDrawer?.classList.contains('is-open')) {
           this.closeCartDrawer();
-        }
-        if (this.wishlistDrawer && this.wishlistDrawer.getAttribute('aria-hidden') === 'false') {
+        } else if (this.wishlistDrawer?.classList.contains('is-open')) {
           this.closeWishlistDrawer();
         }
       }
@@ -558,10 +557,20 @@ class ProductDetails {
     // Get cart from storage
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-    // Check if item already exists
-    const existingItem = cart.find(item => item.id === cartItem.id);
+    // Check if item with same id already exists
+    let existingItem = cart.find(item => item.id === cartItem.id);
+
+    // Also check if same product was added without size/color specifics (from homepage quick-add)
+    if (!existingItem) {
+      existingItem = cart.find(item => item.name === cartItem.name && (!item.size || item.size === this.selectedSize));
+    }
+
     if (existingItem) {
       existingItem.quantity += this.selectedQuantity;
+      // Update properties in case they were added without full details before
+      existingItem.id = cartItem.id;
+      existingItem.color = cartItem.color;
+      existingItem.size = cartItem.size;
     } else {
       cart.push(cartItem);
     }
@@ -573,7 +582,7 @@ class ProductDetails {
     this.updateCartBadge();
     this.renderCartItems();
     this.openCartDrawer();
-    
+
     this.showToast(`${this.selectedQuantity} item(s) added to cart!`, 'success');
 
     // Reset quantity
@@ -600,7 +609,7 @@ class ProductDetails {
 
   // ========== WISHLIST ==========
   toggleWishlist() {
-    let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+    let wishlist = JSON.parse(localStorage.getItem('urbanstep_wishlist')) || [];
 
     const item = {
       id: 'gold-pulse',
@@ -621,13 +630,13 @@ class ProductDetails {
       this.showToast('Added to wishlist', 'success');
     }
 
-    localStorage.setItem('wishlist', JSON.stringify(wishlist));
+    localStorage.setItem('urbanstep_wishlist', JSON.stringify(wishlist));
     this.updateWishlistBadge();
     this.updateWishlistBtn();
   }
 
   // updateWishlistBtn() {
-  //   const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+  //   const wishlist = JSON.parse(localStorage.getItem('urbanstep_wishlist')) || [];
   //   const isWishlisted = wishlist.some(w => w.id === 'gold-pulse');
 
   //   if (isWishlisted) {
@@ -853,87 +862,97 @@ class ProductDetails {
   }
 
   openCartDrawer() {
+    this.cartDrawer.classList.add('is-open');
     this.cartDrawer.setAttribute('aria-hidden', 'false');
     document.getElementById('cart-overlay').hidden = false;
     document.body.classList.add('cart-open');
+    this.cartDrawerBtn?.setAttribute('aria-expanded', 'true');
+    document.getElementById('cart-close')?.focus();
     // Reload cart from localStorage to ensure fresh data
     this.renderCartItems();
   }
 
   closeCartDrawer() {
+    this.cartDrawer.classList.remove('is-open');
     this.cartDrawer.setAttribute('aria-hidden', 'true');
     document.getElementById('cart-overlay').hidden = true;
     document.body.classList.remove('cart-open');
+    this.cartDrawerBtn?.setAttribute('aria-expanded', 'false');
+    this.cartDrawerBtn?.focus();
   }
 
   renderCartItems() {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-    if (cart.length === 0) {
-      this.cartItems.innerHTML = `
-        <div style="padding: 40px 20px; text-align: center;">
-          <p style="font-size: 18px; margin-bottom: 20px;">🛍️ Your cart is empty</p>
-          <p style="color: rgba(0,0,0,0.65); font-size: 14px;">Add a pair and it will appear here instantly.</p>
-          <a href="product-details.html" style="display: inline-block; margin-top: 20px; padding: 10px 20px; background: #f0c040; color: #1a1a1a; border-radius: 8px; font-weight: 600; text-decoration: none;">Continue Shopping</a>
-        </div>
-      `;
-      return;
-    }
-
-    const cartHtml = cart.map((item, idx) => `
-      <div style="padding: 16px; border-bottom: 1px solid rgba(0,0,0,0.08); display: flex; gap: 12px;">
-        <img src="${item.image}" alt="${item.name}" style="width: 80px; height: 80px; object-fit: contain; background: #f9f9f9; border-radius: 8px;" />
-        <div style="flex: 1;">
-          <div style="font-weight: 700; font-size: 14px;">${item.name}</div>
-          <div style="font-size: 12px; color: rgba(0,0,0,0.65); margin-top: 2px;">${item.color} / Size ${item.size}</div>
-          <div style="font-weight: 700; margin-top: 8px;">$${(item.price * item.quantity).toFixed(2)}</div>
-          <div style="display: flex; align-items: center; gap: 8px; margin-top: 8px;">
-            <button class="qty-btn-cart" data-index="${idx}" data-action="minus" style="width: 28px; height: 28px; border: 1px solid rgba(0,0,0,0.1); border-radius: 4px; cursor: pointer;">−</button>
-            <span style="min-width: 30px; text-align: center; font-size: 14px; font-weight: 600;">${item.quantity}</span>
-            <button class="qty-btn-cart" data-index="${idx}" data-action="plus" style="width: 28px; height: 28px; border: 1px solid rgba(0,0,0,0.1); border-radius: 4px; cursor: pointer;">+</button>
-            <button class="remove-cart-item" data-index="${idx}" style="margin-left: auto; padding: 6px 12px; background: transparent; border: 1px solid rgba(0,0,0,0.1); border-radius: 4px; font-size: 12px; cursor: pointer; color: #ef4444;">Remove</button>
-          </div>
-        </div>
-      </div>
-    `).join('');
-
     const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
-    this.cartItems.innerHTML = cartHtml + `
-      <div style="padding: 20px;">
-        <div style="display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 16px; font-weight: 700;">
-          <span>Subtotal:</span>
-          <span>$${totalPrice.toFixed(2)}</span>
-        </div>
-        <a href="cart.html" style="display: block; width: 100%; padding: 14px; background: #f0c040; color: #1a1a1a; border: none; border-radius: 8px; text-align: center; font-weight: 700; text-decoration: none; cursor: pointer; margin-bottom: 10px;">View Cart</a>
-        <a href="checkout.html" style="display: block; width: 100%; padding: 14px; background: #1a1a1a; color: white; border: none; border-radius: 8px; text-align: center; font-weight: 700; text-decoration: none; cursor: pointer;">Checkout</a>
-      </div>
-    `;
+    const summary = cart.length
+      ? cart.map((item) => `
+        <li class="cart-item">
+          <img src="${item.image}" alt="${item.name} sneaker">
+          <div class="cart-item__content">
+            <div class="cart-item__top">
+              <div>
+                <h3>${item.name}</h3>
+                <p>${item.color}</p>
+              </div>
+              <button class="cart-item__remove" type="button" data-cart-remove="${item.name}" aria-label="Remove ${item.name}">×</button>
+            </div>
+            <div class="cart-item__footer">
+              <div class="cart-item__qty" role="group" aria-label="Quantity controls">
+                <button type="button" data-cart-qty="-1" data-cart-name="${item.name}" aria-label="Decrease quantity">−</button>
+                <span>${item.quantity}</span>
+                <button type="button" data-cart-qty="1" data-cart-name="${item.name}" aria-label="Increase quantity">+</button>
+              </div>
+              <strong>$${(item.price * item.quantity).toFixed(2)}</strong>
+            </div>
+          </div>
+        </li>
+      `).join('')
+      : '';
+
+    this.cartItems.innerHTML = cart.length
+      ? `<ul class="cart-items">${summary}</ul>
+         <div style="padding: 20px; border-top: 1px solid rgba(0,0,0,0.08);">
+           <div style="display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 14px; font-weight: 700;">
+             <span>Subtotal:</span>
+             <span>$${totalPrice.toFixed(2)}</span>
+           </div>
+           <a href="cart.html" style="display: block; width: 100%; padding: 12px; background: #f0c040; color: #1a1a1a; border: none; border-radius: 6px; text-align: center; font-weight: 700; text-decoration: none; cursor: pointer; margin-bottom: 8px; font-size: 14px;">Go to Cart</a>
+           <a href="checkout.html" style="display: block; width: 100%; padding: 12px; background: #1a1a1a; color: white; border: none; border-radius: 6px; text-align: center; font-weight: 700; text-decoration: none; cursor: pointer; font-size: 14px;">Checkout</a>
+         </div>`
+      : '<div class="cart-empty"><span aria-hidden="true">🛍️</span><h3>Your cart is empty</h3><p>Add a pair and it will appear here instantly.</p></div>';
 
     // Event listeners
-    document.querySelectorAll('.qty-btn-cart').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const idx = parseInt(e.target.dataset.index);
-        const action = e.target.dataset.action;
-        if (action === 'plus') {
-          cart[idx].quantity++;
-        } else if (action === 'minus' && cart[idx].quantity > 1) {
-          cart[idx].quantity--;
+    this.cartItems?.addEventListener('click', (event) => {
+      const removeButton = event.target.closest('[data-cart-remove]');
+      if (removeButton) {
+        const name = removeButton.dataset.cartRemove;
+        const index = cart.findIndex((item) => item.name === name);
+        if (index >= 0) {
+          cart.splice(index, 1);
+          localStorage.setItem('cart', JSON.stringify(cart));
+          this.renderCartItems();
+          this.updateCartBadge();
         }
-        localStorage.setItem('cart', JSON.stringify(cart));
-        this.renderCartItems();
-        this.updateCartBadge();
-      });
-    });
+        return;
+      }
 
-    document.querySelectorAll('.remove-cart-item').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const idx = parseInt(e.target.dataset.index);
-        cart.splice(idx, 1);
-        localStorage.setItem('cart', JSON.stringify(cart));
-        this.renderCartItems();
-        this.updateCartBadge();
-      });
+      const qtyButton = event.target.closest('[data-cart-qty]');
+      if (qtyButton) {
+        const name = qtyButton.dataset.cartName;
+        const action = parseInt(qtyButton.dataset.cartQty);
+        const item = cart.find((item) => item.name === name);
+        if (item) {
+          item.quantity = Math.max(0, item.quantity + action);
+          if (item.quantity === 0) {
+            const index = cart.findIndex((i) => i.name === name);
+            if (index >= 0) cart.splice(index, 1);
+          }
+          localStorage.setItem('cart', JSON.stringify(cart));
+          this.renderCartItems();
+          this.updateCartBadge();
+        }
+      }
     });
   }
 
@@ -944,10 +963,9 @@ class ProductDetails {
   }
 
   // ========== WISHLIST DRAWER ==========
-  // initWishlistDrawer() {
-  //   this.updateWishlistBadge();
-  //   this.updateWishlistBtn();
-  // }
+  initWishlistDrawer() {
+    this.updateWishlistBadge();
+  }
 
   toggleWishlistDrawer() {
     if (this.wishlistDrawer.getAttribute('aria-hidden') === 'true') {
@@ -958,58 +976,48 @@ class ProductDetails {
   }
 
   openWishlistDrawer() {
+    this.wishlistDrawer.classList.add('is-open');
     this.wishlistDrawer.setAttribute('aria-hidden', 'false');
     document.getElementById('wishlist-overlay').hidden = false;
     document.body.classList.add('wishlist-open');
+    this.wishlistDrawerBtn?.setAttribute('aria-expanded', 'true');
+    document.getElementById('wishlist-close')?.focus();
     this.renderWishlistItems();
   }
 
   closeWishlistDrawer() {
+    this.wishlistDrawer.classList.remove('is-open');
     this.wishlistDrawer.setAttribute('aria-hidden', 'true');
     document.getElementById('wishlist-overlay').hidden = true;
     document.body.classList.remove('wishlist-open');
+    this.wishlistDrawerBtn?.setAttribute('aria-expanded', 'false');
+    this.wishlistDrawerBtn?.focus();
   }
 
   renderWishlistItems() {
-    const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+    const wishlist = JSON.parse(localStorage.getItem('urbanstep_wishlist')) || [];
 
-    if (wishlist.length === 0) {
-      this.wishlistItems.innerHTML = `
-        <div style="padding: 40px 20px; text-align: center;">
-          <p style="font-size: 18px; margin-bottom: 20px;">❤️ Your wishlist is empty</p>
-          <p style="color: rgba(0,0,0,0.65); font-size: 14px;">Save the pairs you want to come back to.</p>
-        </div>
-      `;
-      return;
-    }
+    this.wishlistItems.innerHTML = wishlist.length
+      ? `<ul class="wishlist-items">${wishlist.map((item) => `<li class="wishlist-item"><img src="${item.image}" alt="${item.name} sneaker"><div><h3>${item.name}</h3><p>${item.brand || 'UrbanStep'}</p><strong>${typeof item.price === 'string' ? item.price : '$' + item.price.toFixed(2)}</strong></div><button type="button" data-wishlist-remove="${item.name}" aria-label="Remove ${item.name} from wishlist">×</button></li>`).join('')}</ul>`
+      : '<div class="wishlist-empty"><span aria-hidden="true">♡</span><h3>Your wishlist is empty</h3><p>Save the pairs you want to come back to.</p></div>';
 
-    const wishlistHtml = wishlist.map((item, idx) => `
-      <div style="padding: 16px; border-bottom: 1px solid rgba(0,0,0,0.08); display: flex; gap: 12px;">
-        <img src="${item.image}" alt="${item.name}" style="width: 80px; height: 80px; object-fit: contain; background: #f9f9f9; border-radius: 8px;" />
-        <div style="flex: 1;">
-          <div style="font-weight: 700; font-size: 14px;">${item.name}</div>
-          <div style="font-size: 12px; color: rgba(0,0,0,0.65); margin-top: 2px;">${item.brand}</div>
-          <div style="font-weight: 700; margin-top: 8px;">$${item.price.toFixed(2)}</div>
-          <button class="remove-wishlist-item" data-index="${idx}" style="margin-top: 8px; padding: 6px 12px; background: transparent; border: 1px solid rgba(0,0,0,0.1); border-radius: 4px; font-size: 12px; cursor: pointer; color: #ef4444;">Remove</button>
-        </div>
-      </div>
-    `).join('');
+    this.updateWishlistBadge();
 
-    this.wishlistItems.innerHTML = wishlistHtml;
-
-    document.querySelectorAll('.remove-wishlist-item').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const idx = parseInt(e.target.dataset.index);
-        wishlist.splice(idx, 1);
-        localStorage.setItem('wishlist', JSON.stringify(wishlist));
+    this.wishlistItems?.addEventListener('click', (event) => {
+      const removeButton = event.target.closest('[data-wishlist-remove]');
+      if (!removeButton) return;
+      const name = removeButton.dataset.wishlistRemove;
+      const index = wishlist.findIndex((item) => item.name === name);
+      if (index >= 0) {
+        wishlist.splice(index, 1);
+        localStorage.setItem('urbanstep_wishlist', JSON.stringify(wishlist));
         this.renderWishlistItems();
-        this.updateWishlistBadge();
-      });
+      }
     });
   }
 
   updateWishlistBadge() {
-    const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+    const wishlist = JSON.parse(localStorage.getItem('urbanstep_wishlist')) || [];
     this.wishlistBadge.textContent = wishlist.length;
   }
 

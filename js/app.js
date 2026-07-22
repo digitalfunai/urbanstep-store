@@ -257,12 +257,20 @@
     selectedProduct = index;
     const image = feature.querySelector('.product-feature__media > img');
     const title = feature.querySelector('#featured-product-title');
+    const titleLink = title?.querySelector('a');
     const price = feature.querySelector('.product-feature__price-row strong');
     const color = feature.querySelector('.product-options legend span');
+    const viewDetailsLink = feature.querySelector('.btn-buy-now');
+    const mediaLink = feature.querySelector('.product-feature__media');
+
     if (image) { image.src = product.image; image.alt = `UrbanStep ${product.name} sneaker in ${product.color} colorway`; }
     if (title) title.textContent = product.name;
+    if (titleLink) titleLink.href = `product-details.html?id=${product.id}`;
     if (price) price.textContent = product.price;
     if (color) color.textContent = product.color;
+    if (viewDetailsLink) viewDetailsLink.href = `product-details.html?id=${product.id}`;
+    if (mediaLink) mediaLink.href = `product-details.html?id=${product.id}`;
+
     document.querySelectorAll('.product-swatch').forEach((button) => {
       const isSelected = Number(button.dataset.productIndex) === index;
       button.classList.toggle('is-selected', isSelected);

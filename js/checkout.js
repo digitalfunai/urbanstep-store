@@ -574,69 +574,53 @@ function initDrawers() {
   const wishlistClose = document.getElementById('wishlist-close');
   const wishlistBtn = document.getElementById('btn-wishlist');
 
+  function setCartOpen(isOpen) {
+    if (!cartDrawer || !cartOverlay) return;
+    cartDrawer.classList.toggle('is-open', isOpen);
+    cartDrawer.setAttribute('aria-hidden', String(!isOpen));
+    cartOverlay.hidden = !isOpen;
+    document.body.classList.toggle('cart-open', isOpen);
+    cartBtn?.setAttribute('aria-expanded', String(isOpen));
+    if (isOpen) cartClose?.focus(); else cartBtn?.focus();
+  }
+
+  function setWishlistOpen(isOpen) {
+    if (!wishlistDrawer || !wishlistOverlay) return;
+    wishlistDrawer.classList.toggle('is-open', isOpen);
+    wishlistDrawer.setAttribute('aria-hidden', String(!isOpen));
+    wishlistOverlay.hidden = !isOpen;
+    document.body.classList.toggle('wishlist-open', isOpen);
+    wishlistBtn?.setAttribute('aria-expanded', String(isOpen));
+    if (isOpen) wishlistClose?.focus(); else wishlistBtn?.focus();
+  }
+
   // Cart drawer handlers
   if (cartBtn) {
-    cartBtn.addEventListener('click', () => {
-      if (cartDrawer) {
-        cartDrawer.setAttribute('aria-hidden', 'false');
-        cartOverlay.hidden = false;
-      }
-    });
+    cartBtn.addEventListener('click', () => setCartOpen(true));
   }
   if (cartClose) {
-    cartClose.addEventListener('click', () => {
-      if (cartDrawer) {
-        cartDrawer.setAttribute('aria-hidden', 'true');
-        cartOverlay.hidden = true;
-      }
-    });
+    cartClose.addEventListener('click', () => setCartOpen(false));
   }
   if (cartOverlay) {
-    cartOverlay.addEventListener('click', () => {
-      if (cartDrawer) {
-        cartDrawer.setAttribute('aria-hidden', 'true');
-        cartOverlay.hidden = true;
-      }
-    });
+    cartOverlay.addEventListener('click', () => setCartOpen(false));
   }
 
   // Wishlist drawer handlers
   if (wishlistBtn) {
-    wishlistBtn.addEventListener('click', () => {
-      if (wishlistDrawer) {
-        wishlistDrawer.setAttribute('aria-hidden', 'false');
-        wishlistOverlay.hidden = false;
-      }
-    });
+    wishlistBtn.addEventListener('click', () => setWishlistOpen(true));
   }
   if (wishlistClose) {
-    wishlistClose.addEventListener('click', () => {
-      if (wishlistDrawer) {
-        wishlistDrawer.setAttribute('aria-hidden', 'true');
-        wishlistOverlay.hidden = true;
-      }
-    });
+    wishlistClose.addEventListener('click', () => setWishlistOpen(false));
   }
   if (wishlistOverlay) {
-    wishlistOverlay.addEventListener('click', () => {
-      if (wishlistDrawer) {
-        wishlistDrawer.setAttribute('aria-hidden', 'true');
-        wishlistOverlay.hidden = true;
-      }
-    });
+    wishlistOverlay.addEventListener('click', () => setWishlistOpen(false));
   }
 
   // Escape key closes drawers
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
-    if (cartDrawer && cartDrawer.getAttribute('aria-hidden') === 'false') {
-      cartDrawer.setAttribute('aria-hidden', 'true');
-      cartOverlay.hidden = true;
-    }
-    if (wishlistDrawer && wishlistDrawer.getAttribute('aria-hidden') === 'false') {
-      wishlistDrawer.setAttribute('aria-hidden', 'true');
-      wishlistOverlay.hidden = true;
-    }
+    if (cartDrawer?.classList.contains('is-open')) setCartOpen(false);
+    else if (wishlistDrawer?.classList.contains('is-open')) setWishlistOpen(false);
   });
 }
 
